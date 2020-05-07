@@ -1,9 +1,9 @@
-class CreateItems < ActiveRecord::Migration[6.0]
+ class CreateItems < ActiveRecord::Migration[6.0]
   def change
     create_table :items do |t|
 
     	t.string :name
-    	t.intenger :quantity
+    	t.integer :quantity
     	t.integer :trip_id 
 
       t.timestamps
