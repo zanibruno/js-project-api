@@ -1,19 +1,26 @@
 class TripsController < ApplicationController
 
 	def index 
+		options = {include: :items}
 		trips = Trip.all 
-		render json: TripSerializer.new(trips)
+		render json: trips.to_json(:include => {:items => { :only => [:name, :quantity, :trip_id]}})
+		# trips.to_json(:include => {:items => { :only => [:name, :quantity, :trip_id]}})
+		
 	end 	
 
-	# def show 
-	# 	trip = Trip.find_by(id: params[:id])
-	# 	render json: trip
-	# end 
+	def show
+		trip = Trip.find_by(id: params[:id])
+		if trip
+			render json: TripsSerializer.new(trip)
+		else 
+			flash.now[:error] = 'test show trip'
+		end 
+	end 
 
 	def create
 		trip = Trip.new(trip_params)
 		if trip.save
-			render json: TripSerializer(trip) 
+			render json: trip
 		else 
 			flash.now[:error] = 'test create'
 		end 
@@ -21,11 +28,9 @@ class TripsController < ApplicationController
 
 	def update 
 		@trip = Trip.find_by(id: params[:id])
-		if @trip
 		@trip.update(trip_params)
-	else 
-		flash.now[:error] = 'test update'
-		end 
+		render json: @trip
+
 	end 
 
 
